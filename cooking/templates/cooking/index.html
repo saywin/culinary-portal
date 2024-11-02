@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block main %}
+	<h2>Кулінарний портал</h2>
+	<div class="d-flex justify-content-between">
+		<div class="col-3">
+			<div class="list-group">
+				{% for post in posts %}
+					<a href="#" class="list-group-item list-group-item-action">{{ post.category }}</a>
+				{% endfor %}
+
+			</div>
+		</div>
+		<div class="col-8">
+			{% for post in posts %}
+				<div class="card text-center">
+					<div class="card-header">
+						{{ post.category }}
+					</div>
+					<div class="card-body">
+						<h5 class="card-title">{{ post }}</h5>
+						<p class="card-text">{{ post.content | truncatechars:200 }}</p>
+						<a href="#" class="btn btn-primary">Читати</a>
+					</div>
+					<div class="card-footer text-body-secondary">
+						{{ post.created_at }}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

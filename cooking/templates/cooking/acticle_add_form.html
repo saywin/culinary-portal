@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+
+
+{% block main %}
+
+	<!-- Add post-->
+	<div class="d-flex justify-content-center">
+		<div class="card col-8 mb-4 mt-4">
+			<div class="card-body">
+				<h2 class="text-center">Додавання нової статті</h2>
+				<form action="" method="post" enctype="multipart/form-data">
+					<!--  Fields for filling-->
+					{% csrf_token %}
+					<div>
+					{{ form.as_p }}
+					</div>
+					<button class="btn btn-dark" type="submit">Добавить статью</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div>
+		<div style="margin-top: 100px;"></div>
+	</div>
+{% endblock %}

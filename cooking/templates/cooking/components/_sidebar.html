@@ -1,5 +1,9 @@
+{% load blog_tags %}
+
 <div class="list-group">
+	{% get_all_categories as categories %}
 	{% for category in categories %}
-		<a href="{% url "cooking:category_list" category.pk %}" class="list-group-item list-group-item-action">{{ category.title }}</a>
+		<a href="{{ category.get_absolute_url }}"
+		   class="list-group-item list-group-item-action">{{ category.title }}</a>
 	{% endfor %}
 </div>

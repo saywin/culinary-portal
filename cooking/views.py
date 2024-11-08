@@ -1,6 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from .models import Post, Category
+from django.db.models import F
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -25,3 +26,12 @@ def category_list(request: HttpRequest, pk: int) -> HttpResponse:
         "categories": categories,
     }
     return render(request, "cooking/index.html", context)
+
+
+def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
+    """Сторінка статті"""
+    article = Post.objects.get(pk=pk)
+    recommendation = Post.objects.order_by("-watched")[:5]
+    Post.objects.filter(pk=pk).update(watched=F("watched") + 1)
+    context = {"title": article.title, "post": article, "recommend": recommendation}
+    return render(request, "cooking/article_detail.html", context)

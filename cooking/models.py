@@ -53,8 +53,8 @@ class Post(models.Model):
         verbose_name = "Пост"
         verbose_name_plural = "Пости"
 
-    # def get_absolute_url(self):
-    #     return reverse("cooking:category_list", kwargs={"pk": self.pk})
+    def get_absolute_url(self):
+        return reverse("cooking:post_detail", kwargs={"pk": self.pk})
 
     def __str__(self):
         return self.title

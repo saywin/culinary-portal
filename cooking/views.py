@@ -2,7 +2,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from .models import Post, Category
 from django.db.models import F
-from .forms import PostAddForm, LoginForm
+from .forms import PostAddForm, LoginForm, RegistrationForm
 from django.contrib.auth import login, logout
 
 
@@ -35,7 +35,11 @@ def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
     article = Post.objects.get(pk=pk)
     recommendation = Post.objects.order_by("-watched")[:5]
     Post.objects.filter(pk=pk).update(watched=F("watched") + 1)
-    context = {"title": article.title, "post": article, "recommend": recommendation}
+    context = {
+        "title": article.title,
+        "post": article,
+        "recommend": recommendation,
+    }
     return render(request, "cooking/article_detail.html", context)
 
 
@@ -64,10 +68,7 @@ def user_login(request: HttpRequest) -> HttpResponse:
     else:
         form = LoginForm()
 
-    context = {
-        "title": "Авторизація користувача",
-        "form": form
-    }
+    context = {"title": "Авторизація користувача", "form": form}
     return render(request, "cooking/login_form.html", context)
 
 
@@ -75,3 +76,17 @@ def user_logout(request: HttpRequest) -> HttpResponse:
     """Вихід користувача"""
     logout(request)
     return redirect("cooking:index")
+
+
+def user_register(request: HttpRequest) -> HttpResponse:
+    """Реєстрація користувача"""
+    if request.method == "POST":
+        form = RegistrationForm(data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("cooking:login")
+    else:
+        form = RegistrationForm()
+
+    context = {"title": "Реєстрація користувача", "form": form}
+    return render(request, "cooking/register_form.html", context)

@@ -1,6 +1,14 @@
 from django.urls import path
 
-from cooking.views import index, category_list, post_detail, add_post, user_login, user_logout
+from cooking.views import (
+    index,
+    category_list,
+    post_detail,
+    add_post,
+    user_login,
+    user_logout,
+    user_register,
+)
 
 app_name = "cooking"
 
@@ -11,5 +19,5 @@ urlpatterns = [
     path("add_arcticle/", add_post, name="add_post"),
     path("login/", user_login, name="login"),
     path("logout/", user_logout, name="logout"),
-
+    path("register/", user_register, name="register"),
 ]

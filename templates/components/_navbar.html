@@ -12,7 +12,8 @@
 						class="navbar-toggler-icon"></span></button>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						<li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url "cooking:index" %}">Головна</a></li>
+						<li class="nav-item"><a class="nav-link active" aria-current="page"
+						                        href="{% url "cooking:index" %}">Головна</a></li>
 					</ul>
 					<div class="d-flex">
 						<form class="d-flex" role="search" method="get" action="#!">
@@ -21,20 +22,31 @@
 						</form>
 						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 							<!--  Users-->
-							<li class="nav-item dropdown">
-								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-								   data-bs-toggle="dropdown" aria-expanded="false">
-									Вітаю!
-								</a>
-								<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-									<li><a class="dropdown-item" href="#!">Моя сторінка</a></li>
-									<li><a class="dropdown-item" href="{% url "cooking:add_post" %}">Додати статтю</a></li>
-									<li>
-										<hr class="dropdown-divider">
-									</li>
-									<li><a class="dropdown-item" href="#!">Вихід</a></li>
-								</ul>
-							</li>
+							{% if not request.user.is_authenticated %}
+								<li class="nav-item">
+									<a class="nav-link active" aria-current="page" href="{% url "cooking:login" %}">Увійти</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link active" aria-current="page" href="#!">Зареєструватись</a>
+								</li>
+
+							{% else %}
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+									   data-bs-toggle="dropdown" aria-expanded="false">
+										Вітаю {{ request.user.username }}!
+									</a>
+									<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+										<li><a class="dropdown-item" href="#!">Моя сторінка</a></li>
+										<li><a class="dropdown-item" href="{% url "cooking:add_post" %}">Додати статтю</a></li>
+										<li>
+											<hr class="dropdown-divider">
+										</li>
+										<li><a class="dropdown-item" href="{% url "cooking:logout" %}">Вихід</a></li>
+									</ul>
+								</li>
+							{% endif %}
+
 						</ul>
 					</div>
 				</div>

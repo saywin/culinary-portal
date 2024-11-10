@@ -48,6 +48,14 @@ class Post(models.Model):
         related_name="posts",
         verbose_name="Категорія",
     )
+    author = models.ForeignKey(
+        User,
+        default=None,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        verbose_name="Автор статті"
+    )
 
     class Meta:
         db_table = "post"

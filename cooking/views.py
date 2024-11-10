@@ -4,6 +4,8 @@ from .models import Post, Category
 from django.db.models import F
 from .forms import PostAddForm, LoginForm, RegistrationForm
 from django.contrib.auth import login, logout
+from django.contrib import messages
+from django.views import generic
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -15,7 +17,7 @@ def index(request: HttpRequest) -> HttpResponse:
         "posts": posts,
         "categories": categories,
     }
-    return render(request, "cooking/index.html", context)
+    return render(request, "cooking/_index.html", context)
 
 
 def category_list(request: HttpRequest, pk: int) -> HttpResponse:
@@ -27,20 +29,20 @@ def category_list(request: HttpRequest, pk: int) -> HttpResponse:
         "posts": posts,
         "categories": categories,
     }
-    return render(request, "cooking/index.html", context)
+    return render(request, "cooking/_index.html", context)
 
 
 def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
     """Сторінка статті"""
     article = Post.objects.get(pk=pk)
-    recommendation = Post.objects.order_by("-watched")[:5]
+    recommendation = Post.objects.exclude(pk=pk).order_by("-watched")[:5]
     Post.objects.filter(pk=pk).update(watched=F("watched") + 1)
     context = {
         "title": article.title,
         "post": article,
         "recommend": recommendation,
     }
-    return render(request, "cooking/article_detail.html", context)
+    return render(request, "cooking/_article_detail.html", context)
 
 
 def add_post(request: HttpRequest) -> HttpResponse:
@@ -54,7 +56,7 @@ def add_post(request: HttpRequest) -> HttpResponse:
     else:
         form = PostAddForm()
     context = {"title": "Додати статтю", "form": form}
-    return render(request, "cooking/acticle_add_form.html", context)
+    return render(request, "cooking/_acticle_add_form.html", context)
 
 
 def user_login(request: HttpRequest) -> HttpResponse:
@@ -64,17 +66,21 @@ def user_login(request: HttpRequest) -> HttpResponse:
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            messages.success(
+                request, "Ви успішно приєдналися до свого облікового запису"
+            )
             return redirect("cooking:index")
     else:
         form = LoginForm()
 
     context = {"title": "Авторизація користувача", "form": form}
-    return render(request, "cooking/login_form.html", context)
+    return render(request, "cooking/_login_form.html", context)
 
 
 def user_logout(request: HttpRequest) -> HttpResponse:
     """Вихід користувача"""
     logout(request)
+    messages.success(request, "Ви успішно вийшли з облікового запису")
     return redirect("cooking:index")
 
 
@@ -84,9 +90,10 @@ def user_register(request: HttpRequest) -> HttpResponse:
         form = RegistrationForm(data=request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Ви успішно зареєстрували акаунт")
             return redirect("cooking:login")
     else:
         form = RegistrationForm()
 
     context = {"title": "Реєстрація користувача", "form": form}
-    return render(request, "cooking/register_form.html", context)
+    return render(request, "cooking/_register_form.html", context)

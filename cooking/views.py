@@ -118,6 +118,7 @@ class UpdatePost(generic.UpdateView):
     model = Post
     form_class = PostAddForm
     template_name = "cooking/_article_add_form.html"
+    extra_context = {"title": "Змінити статтю"}
 
 
 class DeletePost(generic.DeleteView):

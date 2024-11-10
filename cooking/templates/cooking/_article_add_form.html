@@ -8,14 +8,26 @@
 	<div class="d-flex justify-content-center">
 		<div class="card col-8 mb-4 mt-4">
 			<div class="card-body">
-				<h2 class="text-center">Додавання нової статті</h2>
+				<h2 class="text-center">
+					{% if "update" in request.path %}
+						Змінити статтю
+					{% else %}
+						Додавання нової статті
+					{% endif %}
+				</h2>
 				<form action="" method="post" enctype="multipart/form-data">
 					<!--  Fields for filling-->
 					{% csrf_token %}
 					<div>
-					{{ form.as_p }}
+						{{ form.as_p }}
 					</div>
-					<button class="btn btn-dark" type="submit">Створити статтю</button>
+					<button class="btn btn-dark" type="submit">
+						{% if "update" in request.path %}
+							Редагувати статтю
+						{% else %}
+							Створити статтю
+						{% endif %}
+					</button>
 				</form>
 			</div>
 		</div>

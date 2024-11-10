@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from cooking.models import Category, Post
+from cooking.models import Category, Post, Comment
 
 
 @admin.register(Category)
@@ -24,3 +24,10 @@ class PostAdmin(admin.ModelAdmin):
             return mark_safe(f"<img src='{photo.url}' width=75/>")
 
     get_photo.short_description = "Мініатюра"
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ["id", "user", "created_at", "post"]
+    list_display_links = ["id", "user"]
+    ordering = ["created_at"]

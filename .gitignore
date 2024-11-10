@@ -2,3 +2,6 @@
 db.sqlite3
 templates_for_django_cook-main
 .env
+/media/
+/photos/
+/www/

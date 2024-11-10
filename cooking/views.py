@@ -197,8 +197,10 @@ class SearchResult(Index):
 def profile(request: HttpRequest, user_id: int) -> HttpResponse:
     """Сторінка користувача"""
     user = User.objects.get(pk=user_id)
+    posts = Post.objects.filter(author=user)
     context = {
         "title": "Персональні данні",
         "user": user,
+        "posts": posts,
     }
     return render(request, "cooking/profile.html", context)

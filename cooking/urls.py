@@ -4,9 +4,14 @@ from cooking.views import (
     user_login,
     user_logout,
     user_register,
-    Index, ArticleByCategory,
+    Index,
+    ArticleByCategory,
     PostDetail,
-    AddPost, UpdatePost, DeletePost
+    AddPost,
+    UpdatePost,
+    DeletePost,
+    SearchResult,
+
 )
 
 app_name = "cooking"
@@ -22,6 +27,7 @@ urlpatterns = [
     path("add_arcticle/", AddPost.as_view(), name="add_post"),
     path("post/<int:pk>/update/", UpdatePost.as_view(), name="post_update"),
     path("post/<int:pk>/delete/", DeletePost.as_view(), name="post_delete"),
+    path("search/", SearchResult.as_view(), name="search"),
 
     path("login/", user_login, name="login"),
     path("logout/", user_logout, name="logout"),

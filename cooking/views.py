@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
 from .models import Post, Category
-from django.db.models import F
+from django.db.models import F, Q
 from .forms import PostAddForm, LoginForm, RegistrationForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
@@ -166,3 +166,13 @@ def user_register(request: HttpRequest) -> HttpResponse:
 
     context = {"title": "Реєстрація користувача", "form": form}
     return render(request, "cooking/_register_form.html", context)
+
+
+class SearchResult(Index):
+    """Пошук слова у заголовку та у змісті статей"""
+    def get_queryset(self):
+        word = self.request.GET.get("q")
+        posts = Post.objects.filter(
+            Q(title__icontains=word) | Q(content__icontains=word)
+        )
+        return posts

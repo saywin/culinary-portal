@@ -2,9 +2,9 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 
-from .models import Post, Category
+from .models import Post, Category, Comment
 from django.db.models import F, Q
-from .forms import PostAddForm, LoginForm, RegistrationForm
+from .forms import PostAddForm, LoginForm, RegistrationForm, CommentForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.views import generic
@@ -90,6 +90,9 @@ class PostDetail(generic.DetailView):
         ).filter(is_published=True).order_by("-watched")[:5]
         context["title"] = post.title
         context["recommend"] = recommend
+        context["comments"] = Comment.objects.filter(post=post)
+        if self.request.user.is_authenticated:
+            context["comment_form"] = CommentForm
         return context
 
 
@@ -126,6 +129,18 @@ class DeletePost(generic.DeleteView):
     model = Post
     success_url = reverse_lazy("cooking:index")
     context_object_name = "post"
+
+
+def add_comment(request: HttpRequest, post_id: int) -> HttpResponse:
+    """Додаємо коментар"""
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)  # commit=False щоб поки не записувало в БД
+        comment.user = request.user
+        comment.post = Post.objects.get(pk=post_id)
+        comment.save()
+        messages.success(request, "Ваш коментар успішно додано")
+    return redirect("cooking:post_detail", post_id)
 
 
 def user_login(request: HttpRequest) -> HttpResponse:

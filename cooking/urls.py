@@ -10,7 +10,7 @@ from cooking.views import (
     AddPost,
     UpdatePost,
     DeletePost,
-    SearchResult,
+    SearchResult, add_comment,
 
 )
 
@@ -32,4 +32,5 @@ urlpatterns = [
     path("login/", user_login, name="login"),
     path("logout/", user_logout, name="logout"),
     path("register/", user_register, name="register"),
+    path("add_comment/<int:post_id>/", add_comment, name="add_comment"),
 ]

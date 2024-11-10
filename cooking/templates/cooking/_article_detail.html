@@ -29,33 +29,41 @@
 			<hr>
 
 			<!--  reviews-->
-			<form action="#!" method="post" , enctype="multipart/form-data">
-				<input type="hidden" name="csrfmiddlewaretoken"
-				       value="dVpvJs374bq08P5ZzKsB7pSNUnoJ6PXRIDRXHc1fjvFIdKmbXrQMDMR0wYHLFtut">
-				<textarea name="text" cols="40" rows="10" class="form-control" placeholder="Текст вашего комментария" required
-				          id="id_text"></textarea>
-				<button class="btn btn-dark" type="submit">Додати коментарій</button>
-			</form>
-
-			<div class="card mt-2"><h5 class="card-header">Какой то человек</h5>
-				<div class="card-body">
-					<p class="card-text">Текст отзыва</p>
+			{% if request.user.is_authenticated %}
+				<form action="{% url "cooking:add_comment" post.pk %}" method="post" , enctype="multipart/form-data">
+					{% csrf_token %}
+					{% include "components/_form_errors.html" %}
+					{{ comment_form.text }}
+					<button class="btn btn-dark" type="submit">Додати коментарій</button>
+				</form>
+			{% endif %}
+			{% for comment in comments %}
+				<div class="card mt-2">
+					<div class="card-header d-flex justify-content-between">
+						<h5><span>{{ comment.user }}</span></h5>
+						<span class="text-muted small align-self-end">{{ comment.created_at }}</span>
+					</div>
+					<div class="card-body">
+						<p class="card-text">{{ comment.text }}</p>
+					</div>
 				</div>
-			</div>
+			{% endfor %}
 		</div>
 		<!--  Recommendation-->
 		<div class="col-1"></div>
 		<div class="col-4">
 			{% for post_rec in recommend %}
 				<div class="card" style="width: 18rem;">
-				{% if post_rec.photo %}
-					<img src="{{ post_rec.photo.url }}" width="200" alt="">
+					{% if post_rec.photo %}
+						<img src="{{ post_rec.photo.url }}" width="200" alt="">
 					{% else %}
-					<img class="card-img-top" src="https://www.raumplus.ru/upload/iblock/99e/Skoro-zdes-budet-foto.jpg" width="200"
-				     alt="">
-				{% endif %}
-				<div class="card-body"><h5 class="card-title">{{ post_rec.title }}</h5><a href="{{ post_rec.get_absolute_url }}" class="btn btn-primary">Детальніше</a></div>
-			</div>
+						<img class="card-img-top" src="https://www.raumplus.ru/upload/iblock/99e/Skoro-zdes-budet-foto.jpg"
+						     width="200"
+						     alt="">
+					{% endif %}
+					<div class="card-body"><h5 class="card-title">{{ post_rec.title }}</h5><a
+							href="{{ post_rec.get_absolute_url }}" class="btn btn-primary">Детальніше</a></div>
+				</div>
 			{% endfor %}
 		</div>
 	</div>

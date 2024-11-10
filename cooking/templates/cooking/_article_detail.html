@@ -7,7 +7,7 @@
 				<div class="card-header d-flex justify-content-between">{{ post.category }}
 					<div>
 						<a href="#!" class="btn btn-dark">Удалить</a>
-						<a href="#!" class="btn btn-dark">Изменить</a>
+						<a href="{% url "cooking:post_update" pk=post.pk %}" class="btn btn-dark">Изменить</a>
 						<a href="#!" class="btn btn-dark">Назад</a>
 					</div>
 				</div>

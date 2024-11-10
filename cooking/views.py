@@ -107,6 +107,13 @@ class AddPost(generic.CreateView):
     extra_context = {"title": "Додати статтю"}
 
 
+class UpdatePost(generic.UpdateView):
+    """Редагування статті"""
+    model = Post
+    form_class = PostAddForm
+    template_name = "cooking/_article_add_form.html"
+
+
 def user_login(request: HttpRequest) -> HttpResponse:
     """Аутентифікація користувача"""
     if request.method == "POST":

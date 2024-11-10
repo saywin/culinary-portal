@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -191,3 +192,13 @@ class SearchResult(Index):
             Q(title__icontains=word) | Q(content__icontains=word)
         )
         return posts
+
+
+def profile(request: HttpRequest, user_id: int) -> HttpResponse:
+    """Сторінка користувача"""
+    user = User.objects.get(pk=user_id)
+    context = {
+        "title": "Персональні данні",
+        "user": user,
+    }
+    return render(request, "cooking/profile.html", context)

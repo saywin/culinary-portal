@@ -6,7 +6,7 @@ from cooking.views import (
     user_register,
     Index, ArticleByCategory,
     PostDetail,
-    AddPost, UpdatePost
+    AddPost, UpdatePost, DeletePost
 )
 
 app_name = "cooking"
@@ -21,6 +21,7 @@ urlpatterns = [
     # path("add_arcticle/", add_post, name="add_post"),
     path("add_arcticle/", AddPost.as_view(), name="add_post"),
     path("post/<int:pk>/update/", UpdatePost.as_view(), name="post_update"),
+    path("post/<int:pk>/delete/", DeletePost.as_view(), name="post_delete"),
 
     path("login/", user_login, name="login"),
     path("logout/", user_logout, name="logout"),

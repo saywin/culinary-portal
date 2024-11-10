@@ -39,7 +39,7 @@ class Post(models.Model):
         default=0, verbose_name="Кількість переглядів"
     )
     is_published = models.BooleanField(
-        default=False, verbose_name="Опубліковано?"
+        default=True, verbose_name="Опубліковано?"
     )
     category = models.ForeignKey(
         Category,

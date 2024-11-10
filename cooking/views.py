@@ -1,5 +1,7 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+
 from .models import Post, Category
 from django.db.models import F
 from .forms import PostAddForm, LoginForm, RegistrationForm
@@ -79,9 +81,13 @@ class PostDetail(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()  # context = {}
-        Post.objects.filter(pk=self.kwargs["pk"]).update(watched=F("watched") + 1)
+        Post.objects.filter(
+            pk=self.kwargs["pk"]
+        ).update(watched=F("watched") + 1)
         post = Post.objects.get(pk=self.kwargs["pk"])
-        recommend = Post.objects.exclude(pk=self.kwargs["pk"]).order_by("-watched")[:5]
+        recommend = Post.objects.exclude(
+            pk=self.kwargs["pk"]
+        ).filter(is_published=True).order_by("-watched")[:5]
         context["title"] = post.title
         context["recommend"] = recommend
         return context
@@ -112,6 +118,13 @@ class UpdatePost(generic.UpdateView):
     model = Post
     form_class = PostAddForm
     template_name = "cooking/_article_add_form.html"
+
+
+class DeletePost(generic.DeleteView):
+    """Видалення статті"""
+    model = Post
+    success_url = reverse_lazy("cooking:index")
+    context_object_name = "post"
 
 
 def user_login(request: HttpRequest) -> HttpResponse:

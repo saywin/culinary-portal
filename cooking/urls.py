@@ -14,6 +14,10 @@ from cooking.views import (
     add_comment,
     profile,
     UserChangePassword,
+    CookingAPI,
+    CookingAPIDetail,
+    CategoryAPIDetail,
+    CategoryAPI,
 )
 
 app_name = "cooking"
@@ -37,6 +41,10 @@ urlpatterns = [
         UserChangePassword.as_view(),
         name="change_password",
     ),
+    path("posts/api/", CookingAPI.as_view(), name="cooking_api"),
+    path("posts/api/<int:pk>", CookingAPIDetail.as_view(), name="cooking_api_detail"),
+    path("categories/api/", CategoryAPI.as_view(), name="category_api"),
+    path("categories/api/<int:pk>", CategoryAPIDetail.as_view(), name="category_api_detail"),
     path("login/", user_login, name="login"),
     path("logout/", user_logout, name="logout"),
     path("register/", user_register, name="register"),

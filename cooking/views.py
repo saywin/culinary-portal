@@ -7,9 +7,11 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.views import generic
 from django.contrib.auth.views import PasswordChangeView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 from .forms import PostAddForm, LoginForm, RegistrationForm, CommentForm
 from .models import Post, Category, Comment
+from .serializers import PostSerializer, CategorySerializer
 
 # def index(request: HttpRequest) -> HttpResponse:
 #     """Для головної сторінки"""
@@ -226,3 +228,28 @@ class UserChangePassword(PasswordChangeView):
 
     template_name = "cooking/password_change_form.html"
     success_url = reverse_lazy("cooking:index")
+
+
+class CookingAPI(ListAPIView):
+    """Видасть всі статті по API"""
+    queryset = Post.objects.filter(is_published=True)
+    serializer_class = PostSerializer
+
+
+class CookingAPIDetail(RetrieveAPIView):
+    """Видасть одну статтю по API"""
+    queryset = Post.objects.filter(is_published=True)
+    serializer_class = PostSerializer
+
+
+class CategoryAPI(ListAPIView):
+    """Видасть всі категорії по API"""
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class CategoryAPIDetail(RetrieveAPIView):
+    """Видасть одну категорію по API"""
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+

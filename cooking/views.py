@@ -2,14 +2,14 @@ from django.contrib.auth.models import User
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-
-from .models import Post, Category, Comment
 from django.db.models import F, Q
-from .forms import PostAddForm, LoginForm, RegistrationForm, CommentForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.views import generic
+from django.contrib.auth.views import PasswordChangeView
 
+from .forms import PostAddForm, LoginForm, RegistrationForm, CommentForm
+from .models import Post, Category, Comment
 
 # def index(request: HttpRequest) -> HttpResponse:
 #     """Для головної сторінки"""
@@ -71,8 +71,10 @@ class ArticleByCategory(Index):
 #     }
 #     return render(request, "cooking/_article_detail.html", context)
 
+
 class PostDetail(generic.DetailView):
     """Сторінка статті"""
+
     model = Post
     template_name = "cooking/_article_detail.html"
 
@@ -82,13 +84,15 @@ class PostDetail(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()  # context = {}
-        Post.objects.filter(
-            pk=self.kwargs["pk"]
-        ).update(watched=F("watched") + 1)
+        Post.objects.filter(pk=self.kwargs["pk"]).update(
+            watched=F("watched") + 1
+        )
         post = Post.objects.get(pk=self.kwargs["pk"])
-        recommend = Post.objects.exclude(
-            pk=self.kwargs["pk"]
-        ).filter(is_published=True).order_by("-watched")[:5]
+        recommend = (
+            Post.objects.exclude(pk=self.kwargs["pk"])
+            .filter(is_published=True)
+            .order_by("-watched")[:5]
+        )
         context["title"] = post.title
         context["recommend"] = recommend
         context["comments"] = Comment.objects.filter(post=post)
@@ -110,8 +114,10 @@ class PostDetail(generic.DetailView):
 #     context = {"title": "Додати статтю", "form": form}
 #     return render(request, "cooking/_acticle_add_form.html", context)
 
+
 class AddPost(generic.CreateView):
     """Додавання статті від користувача"""
+
     form_class = PostAddForm
     template_name = "cooking/_article_add_form.html"
     extra_context = {"title": "Додати статтю"}
@@ -123,6 +129,7 @@ class AddPost(generic.CreateView):
 
 class UpdatePost(generic.UpdateView):
     """Редагування статті"""
+
     model = Post
     form_class = PostAddForm
     template_name = "cooking/_article_add_form.html"
@@ -131,6 +138,7 @@ class UpdatePost(generic.UpdateView):
 
 class DeletePost(generic.DeleteView):
     """Видалення статті"""
+
     model = Post
     success_url = reverse_lazy("cooking:index")
     context_object_name = "post"
@@ -140,7 +148,9 @@ def add_comment(request: HttpRequest, post_id: int) -> HttpResponse:
     """Додаємо коментар"""
     form = CommentForm(data=request.POST)
     if form.is_valid():
-        comment = form.save(commit=False)  # commit=False щоб поки не записувало в БД
+        comment = form.save(
+            commit=False
+        )  # commit=False щоб поки не записувало в БД
         comment.user = request.user
         comment.post = Post.objects.get(pk=post_id)
         comment.save()
@@ -190,6 +200,7 @@ def user_register(request: HttpRequest) -> HttpResponse:
 
 class SearchResult(Index):
     """Пошук слова у заголовку та у змісті статей"""
+
     def get_queryset(self):
         word = self.request.GET.get("q")
         posts = Post.objects.filter(
@@ -208,3 +219,10 @@ def profile(request: HttpRequest, user_id: int) -> HttpResponse:
         "posts": posts,
     }
     return render(request, "cooking/profile.html", context)
+
+
+class UserChangePassword(PasswordChangeView):
+    """Простий спосіб зміни пароля користувача"""
+
+    template_name = "cooking/password_change_form.html"
+    success_url = reverse_lazy("cooking:index")

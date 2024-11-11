@@ -9,7 +9,8 @@ from cooking import views
 app_name = "cooking"
 
 urlpatterns = [
-    path("", cache_page(60 * 15)(views.Index.as_view()), name="index"),
+    # path("", cache_page(60 * 3)(views.Index.as_view()), name="index"), # Хешування на базі index.html
+    path("", views.Index.as_view(), name="index"),
     path(
         "category/<int:pk>/",
         views.ArticleByCategory.as_view(),

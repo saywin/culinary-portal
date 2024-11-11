@@ -1,11 +1,15 @@
 {% extends "base.html" %}
+{% load cache %}
 
 {% block main %}
 	<h2>Кулинарный портал</h2>
 	<div class="d-flex justify-content-between">
 		<div class="col-3">
 			<!-- Sidebar-->
-			{% include "cooking/components/_sidebar.html" %}
+			<!--Хешування на базі шаблона-->
+{#			{% cache 500 sidebar %}#}
+				{% include "cooking/components/_sidebar.html" %}
+{#			{% endcache %}#}
 		</div>
 		<!-- Posts-->
 		<div class="col-8">

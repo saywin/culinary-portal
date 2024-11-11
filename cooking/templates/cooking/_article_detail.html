@@ -6,8 +6,10 @@
 			<div class="card">
 				<div class="card-header d-flex justify-content-between">{{ post.category }}
 					<div>
-						<a href="{% url "cooking:post_delete" pk=post.pk %}" class="btn btn-dark">Видалити</a>
-						<a href="{% url "cooking:post_update" pk=post.pk %}" class="btn btn-dark">Змінити</a>
+						{% if request.user == post.author %}
+							<a href="{% url "cooking:post_update" pk=post.pk %}" class="btn btn-dark">Змінити</a>
+							<a href="{% url "cooking:post_delete" pk=post.pk %}" class="btn btn-dark">Видалити</a>
+						{% endif %}
 						<a href="{% url "cooking:category_list" pk=post.category.pk %}" class="btn btn-dark">Назад</a>
 					</div>
 				</div>
@@ -22,7 +24,7 @@
 					<p class="card-text">{{ post.content | linebreaks }}</p>
 				</div>
 				<div class="card-footer d-flex justify-content-between"><p class="card-text">{{ post.created_at }}</p>
-					<a href="/profile/1">Автор статьи: Какой то человек</a>
+					<a href="{% url "cooking:profile" post.author.pk %}">Автор статті: {{ post.author }}</a>
 					<p class="card-text">{{ post.watched }}</p>
 				</div>
 			</div>

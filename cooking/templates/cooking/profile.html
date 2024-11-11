@@ -141,14 +141,17 @@
 									<div class="card-text">{{ post.title }}</div>
 									<div class="d-flex justify-content-between">
 										<div>Перегляди: {{ post.watched }}</div>
-										<div>
-											<a href="{% url "cooking:post_update" post.pk %}" class="btn btn-info btn-sm"><i class="fa-solid fa-pen-to-square fs-5">Змінити</i></a>
-										</div>
-										<div>
-											<a href="{% url "cooking:post_delete" post.pk %}" class="btn btn-danger btn-sm">
-												<i class="fa-solid fa-xmark fs-5">Видалити</i>
-											</a>
-										</div>
+										{% if request.user == post.author %}
+											<div>
+												<a href="{% url "cooking:post_update" post.pk %}" class="btn btn-info btn-sm"><i
+														class="fa-solid fa-pen-to-square fs-5">Змінити</i></a>
+											</div>
+											<div>
+												<a href="{% url "cooking:post_delete" post.pk %}" class="btn btn-danger btn-sm">
+													<i class="fa-solid fa-xmark fs-5">Видалити</i>
+												</a>
+											</div>
+										{% endif %}
 									</div>
 								</div>
 							</div>

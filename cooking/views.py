@@ -116,6 +116,10 @@ class AddPost(generic.CreateView):
     template_name = "cooking/_article_add_form.html"
     extra_context = {"title": "Додати статтю"}
 
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
 
 class UpdatePost(generic.UpdateView):
     """Редагування статті"""

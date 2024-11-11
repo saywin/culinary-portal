@@ -9,7 +9,6 @@ urlpatterns = [
     path("", include("cooking.urls", namespace="cooking")),
 ]
 
-
 if settings.DEBUG:
     urlpatterns += static(
         settings.STATIC_URL, document_root=settings.STATIC_ROOT

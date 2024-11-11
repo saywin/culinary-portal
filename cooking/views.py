@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.views import generic
 from django.contrib.auth.views import PasswordChangeView
 from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 
 from .forms import PostAddForm, LoginForm, RegistrationForm, CommentForm
 from .models import Post, Category, Comment
@@ -240,6 +241,7 @@ class CookingAPIDetail(RetrieveAPIView):
     """Видасть одну статтю по API"""
     queryset = Post.objects.filter(is_published=True)
     serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class CategoryAPI(ListAPIView):

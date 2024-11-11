@@ -254,4 +254,3 @@ class CategoryAPIDetail(RetrieveAPIView):
     """Видасть одну категорію по API"""
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-
